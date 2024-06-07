@@ -31,10 +31,12 @@ truck4 = pygame.image.load('Assets/truck4.png').convert_alpha()
 truck5 = pygame.image.load('Assets/truck5.png').convert_alpha()
 bus = pygame.image.load('Assets/bus.png').convert_alpha()
 
-obstacle_width = [50,45,50,55,60,55]
-obstacle_height = 120
-obstacle_x = random.randint(150, screen_width - obstacle_width-150)
-obstacle_y = -obstacle_height
+i = random.randint(0,5)
+
+obstacle_width = [55,45,50,55,60,55]
+obstacle_height = [132,73,95,99,113,160]
+obstacle_x = random.randint(150, screen_width - obstacle_width[i]-150)
+obstacle_y = -obstacle_height[i]
 obstacle_speed = 3
 obstacle = [truck1, truck2, truck3, truck4, truck5, bus]
 
@@ -108,13 +110,12 @@ while running:
     # Update the obstacles
     obstacle_y += speed + obstacle_speed
     if obstacle_y > screen_height:
+        i = random.randint(0,5) 
         obstacle_x = random.randint(150, 650)
-        obstacle_y = -obstacle_height
+        obstacle_y = -obstacle_height[i]
 
     chance1 = random.randint(1,chanceTop)
     chance2 = random.randint(1,10)
-
-    print(chance1,chance2,chance1 // chance2)
 
     coin_y += speed
     if coin_y > screen_height:
@@ -128,7 +129,7 @@ while running:
         score += 1
 
     # Check for collision
-    if player_x < obstacle_x + obstacle_width and player_x + player_width > obstacle_x and player_y < obstacle_y + obstacle_height and player_y + player_height > obstacle_y:
+    if player_x < obstacle_x + obstacle_width[i] and player_x + player_width > obstacle_x and player_y < obstacle_y + obstacle_height[i] and player_y + player_height > obstacle_y:
         game_over()
 
 
@@ -139,7 +140,7 @@ while running:
     screen.blit(player, (player_x, player_y))
 
     # Draw the obstacles
-    screen.blit(obstacle, (obstacle_x, obstacle_y))
+    screen.blit(obstacle[i], (obstacle_x, obstacle_y))
 
     # Draw coins
     screen.blit(coin, (coin_x, coin_y))
