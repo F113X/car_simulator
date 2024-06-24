@@ -71,8 +71,7 @@ def game_over():
     screen.blit(game_over_text, (screen_width // 2 - 100, screen_height // 2 - 50))
     pygame.display.update()
 
-    pygame.quit()
-    quit()
+    screen.fill(black)
 
 # Game loop
 running = True
@@ -93,7 +92,7 @@ while running:
         player_x -= player_speed
     if keys[pygame.K_RIGHT] and player_x <= 680:
         player_x += player_speed
-    if keys[pygame.K_UP] and speed <= 20:
+    if keys[pygame.K_UP] and speed <= 15:
         speed += 0.3
     if keys[pygame.K_DOWN] or keys[pygame.K_SPACE] and speed >= 0:
        speed -= 0.7
