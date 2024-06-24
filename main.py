@@ -64,96 +64,135 @@ def show_score():
     score_text = font.render("Score: " + str(score), True, white)
     screen.blit(score_text, (10, 10))
 
-def game_over():
-    #Displays the game over message and quits the game.
+# def game_over():
+#     #Displays the game over message and quits the game.
 
-    game_over_text = font.render("Game Over. Press 'space' to restart", True, white)
-    screen.blit(game_over_text, (screen_width // 2 - 100, screen_height // 2 - 50))
-    pygame.display.update()
+#     game_over_text = font.render("Game Over. Press 'space' to restart", True, white)
+#     screen.blit(game_over_text, (screen_width // 2 - 100, screen_height // 2 - 50))
+#     pygame.display.update()
+#     keys = pygame.key.get_pressed()
+    
+#     while True:
+#         keys = pygame.key.get_pressed()
+#         if keys[pygame.K_SPACE]:
+#             break
+#         else:
+#             continue
 
-    screen.fill(black)
+
+
+def shop():
+    print('welcome to shop :)')
 
 # Game loop
 running = True
 clock = pygame.time.Clock()
 
-def shop():
-    print('welcome to shop :)')
 
-while running:
-    # Handle events
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
 
-    # Move the player
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT] and player_x >= 150:
-        player_x -= player_speed
-    if keys[pygame.K_RIGHT] and player_x <= 680:
-        player_x += player_speed
-    if keys[pygame.K_UP] and speed <= 15:
-        speed += 0.3
-    if keys[pygame.K_DOWN] or keys[pygame.K_SPACE] and speed >= 0:
-       speed -= 0.7
-    if keys[pygame.K_UP] == False and speed >= 0:
-        speed -= 0.1
-    
-    if speed <= 0.5:
-        player_speed = 0
-    if speed > 0.5 and speed <= 10:
-        player_speed = 3
-    if speed > 10:
-        player_speed = 7
+start = 1
 
-    # Update the obstacles
-    obstacle_y += speed + obstacle_speed
-    if obstacle_y > screen_height:
-        i = random.randint(0,5) 
-        obstacle_x = random.randint(150, 650)
-        obstacle_y = -obstacle_height[i]
+if start == 1:
 
-    chance1 = random.randint(1,chanceTop)
-    chance2 = random.randint(1,10)
+    while running:
+        # Handle events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-    coin_y += speed
-    if coin_y > screen_height:
-        if chance1 // chance2 == 1:
+        # Move the player
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] and player_x >= 150:
+            player_x -= player_speed
+        if keys[pygame.K_RIGHT] and player_x <= 680:
+            player_x += player_speed
+        if keys[pygame.K_UP] and speed <= 15:
+            speed += 0.3
+        if keys[pygame.K_DOWN] or keys[pygame.K_SPACE] and speed >= 0:
+            speed -= 0.7
+        if keys[pygame.K_UP] == False and speed >= 0:
+            speed -= 0.1
+        
+        if speed <= 0.5:
+            player_speed = 0
+        if speed > 0.5 and speed <= 10:
+            player_speed = 3
+        if speed > 10:
+            player_speed = 7
+
+        # Update the obstacles
+        obstacle_y += speed + obstacle_speed
+        if obstacle_y > screen_height:
+            i = random.randint(0,5) 
+            obstacle_x = random.randint(150, 650)
+            obstacle_y = -obstacle_height[i]
+
+        chance1 = random.randint(1,chanceTop)
+        chance2 = random.randint(1,10)
+
+        coin_y += speed
+        if coin_y > screen_height:
+            if chance1 // chance2 == 1:
+                coin_x = random.randint(150, 680)
+                coin_y = -coin_height
+
+        if player_x < coin_x + coin_width and player_x + player_width > coin_x and player_y < coin_y + coin_height and player_y + player_height > coin_y:
             coin_x = random.randint(150, 680)
             coin_y = -coin_height
+            score += 1
 
-    if player_x < coin_x + coin_width and player_x + player_width > coin_x and player_y < coin_y + coin_height and player_y + player_height > coin_y:
-        coin_x = random.randint(150, 680)
-        coin_y = -coin_height
-        score += 1
+        # Check for collision
+        if player_x < obstacle_x + obstacle_width[i] and player_x + player_width > obstacle_x and player_y < obstacle_y + obstacle_height[i] and player_y + player_height > obstacle_y:
+            #game_over()
+            game_over_text = font.render("Game Over. Press 'space' to restart", True, white)
+            screen.blit(game_over_text, (screen_width // 2 - 100, screen_height // 2 - 50))
+            pygame.display.update()
+            keys = pygame.key.get_pressed()
+            while True:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        running = False
+                
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_SPACE]:
+                    break
+                else:
+                    continue
 
-    # Check for collision
-    if player_x < obstacle_x + obstacle_width[i] and player_x + player_width > obstacle_x and player_y < obstacle_y + obstacle_height[i] and player_y + player_height > obstacle_y:
-        game_over()
+                break
+
+            i = random.randint(0,5) 
+            obstacle_x = random.randint(150, 650)
+            obstacle_y = -obstacle_height[i]
+
+            score = 0
+            player_x = screen_width // 2 - player_width // 2
+            speed = 0 
 
 
-    screen.blit(background, (0, 0))
-    roadMove(speed)
 
-    # Draw the player
-    screen.blit(player, (player_x, player_y))
+        screen.blit(background, (0, 0))
+        roadMove(speed)
 
-    # Draw the obstacles
-    screen.blit(obstacle[i], (obstacle_x, obstacle_y))
+        # Draw the player
+        screen.blit(player, (player_x, player_y))
 
-    # Draw coins
-    screen.blit(coin, (coin_x, coin_y))
+        # Draw the obstacles
+        screen.blit(obstacle[i], (obstacle_x, obstacle_y))
 
-    # Display the score
-    show_score()
+        # Draw coins
+        screen.blit(coin, (coin_x, coin_y))
 
-    # Update the screen
-    pygame.display.flip()
+        # Display the score
+        show_score()
 
-    # Set the frame rate
-    clock.tick(60)
+        # Update the screen
+        pygame.display.flip()
 
-# Quit the game
-pygame.quit()
-print(score)
-quit()
+        # Set the frame rate
+        clock.tick(60)
+
+    # Quit the game
+    pygame.quit()
+    print(score)
+    quit()
